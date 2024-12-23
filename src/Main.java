@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Timer;
 
 public class Main{
    static ArrayList<Book> books = new ArrayList<>();
@@ -10,7 +11,7 @@ public class Main{
 
 
    static void menu(){
-       System.out.println("options:\n" + "1-ajouter :\n2-afficher :\n3-supprimer:\n4- rechercher\n" );
+       System.out.println("options:\n" + "1-ajouter :\n2-afficher :\n3-supprimer:\n4-rechercher\n5-modifier:\n" );
        System.out.println("choisir une option:");
    }
 
@@ -22,13 +23,12 @@ public class Main{
     public static void addBook(){
         Book mybook1 = new Book();
         System.out.println("enter le nom de livre ");
-        mybook1.titre = scanner.next();
+        mybook1.titre = scanner.nextLine();
         System.out.println("enter le nom de auteur");
-        mybook1.auteur = scanner.next();
+        mybook1.auteur = scanner.nextLine();
         System.out.println("enter isbn de livre");
         mybook1.isbn = scanner.nextLong();
-        System.out.println("disponibilite");
-        mybook1.dispo = scanner.nextBoolean();
+        mybook1.dispo = true;
 
         books.add(mybook1);
 
@@ -44,54 +44,98 @@ public class Main{
     }
 
     public static void removebook(){
+        Book mybook1 = new Book();
         System.out.println("enter le nom de livre :");
          String titre = scanner.nextLine();
 
-
-         Book mybook1 = new Book();
-
         for (int i = 0 ; i < books.size() ; i++){
             if (titre.equals(books.get(i).titre)){
-
                 mybook1 = books.get(i);
+                break;
              }
          }
 
+        if (books.isEmpty()) {
+            System.out.println("Livre introuvable.");
+            return;
+        }
+
         books.remove(mybook1);
+        System.out.println("Livre supprimé avec succès!");
     }
 
 
-    public static void searchbook(){
 
+
+
+
+    public static void searchbook(){
+        if (books.isEmpty()){
+            System.out.println("la biblioteque est vide");
+            return;
+        }
+
+        System.out.println("enter le nom de livre :");
         String titre = scanner.nextLine();
         Book mybook1 = new Book();
 
         for (int i = 0 ; i < books.size() ; i++){
             if (titre.equals(books.get(i).titre)){
-
                 mybook1 = books.get(i);
-
-            }
+                System.out.println(mybook1.toString());
+            }else System.out.println("le livre introuvable");
         }
-        System.out.println(mybook1.toString());
+
     }
 
 
 
-    public static void editbook(){
+    public static void editbook() {
+        System.out.println("Enter le ISBN de livre à modifier: ");
+        Long isbn = scanner.nextLong();
 
 
-       String titre = scanner.nextLine();
-        Book mybook1 = new Book();
+        for (Book book : books) {
+            if (book.getIsbn().equals(isbn)) {
+                System.out.println("1 - titre\n2 - auteur\n3 - disponible\n4 - emprunté");
 
+                int choix = scanner.nextInt();
+                scanner.nextLine();
+                switch (choix) {
+                    case 1:
+                        System.out.println("enter le titre de livre:");
+                        book.titre = scanner.nextLine();
+                     break;
+                     case 2:
+                         System.out.println("enter le nom de l'auteur de livre:");
+                         book.auteur= scanner.nextLine();
+                     break;
+                     case 3:
+                         System.out.println("enter la disponibilité de livre:");
+                         book.dispo = scanner.nextBoolean();
+                         break;
 
-        for (int i = 0 ; i < books.size() ; i++){
-            if (titre.equals(books.get(i).titre)) {
-                mybook1 = books.get(i);
-            }
+                    default:
+                        System.out.println("introuvable");
+                }
+
 
             }
         }
+    }
+        /*
+         public static void editBook() {
+        System.out.println("Enter le nom de livre à modifier: ");
+        String title = scanner.nextLine();
+
+        Book bookToEdit = null;
+        for (int i = 0; i < books.size(); i++) {
+            if (title.equals(books.get(i).titre)) {
+                bookToEdit = books.get(i);
+                break;
+            }
+        }
+         */
 
 
 
@@ -106,6 +150,7 @@ public class Main{
            menu();
 
            choix = scanner.nextInt();
+           scanner.nextLine();
 
            switch (choix){
                case 1:
@@ -119,6 +164,9 @@ public class Main{
                    break;
                case 4:
                    searchbook();
+                   break;
+               case 5:
+                   editbook();
                    break;
            }
 
